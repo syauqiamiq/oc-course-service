@@ -29,4 +29,9 @@ type Repository interface {
 	GetCourseByID(id string) (models.Course, error)
 	UpdateCourseByID(id string, data models.Course) (models.Course, error)
 	DeleteCourseByID(id string) (models.Course, error)
+	CreateChapter(data models.Chapter) (models.Chapter, error)
+	GetAllChapter() ([]models.Chapter, error)
+	GetChapterByID(id string) (models.Chapter, error)
+	UpdateChapterByID(id string, data models.Chapter) (models.Chapter, error)
+	DeleteChapterByID(id string) (models.Chapter, error)
 }

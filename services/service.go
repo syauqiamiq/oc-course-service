@@ -29,4 +29,9 @@ type Service interface {
 	GetAllCourse(pageSize string, page string, keyword string) ([]models.Course, helper.MetaData, error)
 	GetCourseByID(id string) (models.Course, error)
 	DeleteCourseByID(id string) (models.Course, error)
+	CreateChapter(input dto.ChapterInput) (models.Chapter, error)
+	UpdateChapter(id string, input dto.UpdateChapterInput) (models.Chapter, error)
+	GetAllChapter() ([]models.Chapter, error)
+	GetChapterByID(id string) (models.Chapter, error)
+	DeleteChapterByID(id string) (models.Chapter, error)
 }

@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"ocCourseService/models"
 
 	"os"
 
@@ -28,7 +29,14 @@ func InitPostgresDB() *gorm.DB {
 		os.Exit(1)
 	}
 
-	err = db.AutoMigrate(&models.User{}, &models.RefreshToken{})
+	err = db.AutoMigrate(
+		&models.Chapter{},
+		&models.Course{},
+		&models.ImageCourse{},
+		&models.Lesson{},
+		&models.Mentor{},
+		&models.MyCourse{},
+		&models.Review{})
 	if err != nil {
 		log.Println("Unable to migrate")
 		os.Exit(1)

@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *handler) CreateMentorHandler(c *gin.Context) {
-	var input dto.MentorInput
+func (h *handler) CreateCourseHandler(c *gin.Context) {
+	var input dto.CourseInput
 	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
@@ -19,19 +19,24 @@ func (h *handler) CreateMentorHandler(c *gin.Context) {
 		return
 	}
 
-	createdMentor, err := h.service.CreateMentor(input)
+	createdCourse, err := h.service.CreateCourse(input)
 	if err != nil {
+		if err.Error() == "mentor not found" {
+			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
+			c.JSON(http.StatusNotFound, response)
+			return
+		}
 		response := helper.APIResponse("error", http.StatusBadRequest, err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	formattedResponse := dto.FormatMentor(createdMentor)
+	formattedResponse := dto.FormatCourse(createdCourse)
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) UpdateMentorHandler(c *gin.Context) {
-	var input dto.UpdateMentorInput
+func (h *handler) UpdateCourseHandler(c *gin.Context) {
+	var input dto.UpdateCourseInput
 	err := c.ShouldBindJSON(&input)
 
 	id := c.Param("id")
@@ -43,8 +48,13 @@ func (h *handler) UpdateMentorHandler(c *gin.Context) {
 		return
 	}
 
-	updatedMentor, err := h.service.UpdateMentor(id, input)
+	updatedCourse, err := h.service.UpdateCourse(id, input)
 	if err != nil {
+		if err.Error() == "course not found" {
+			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
+			c.JSON(http.StatusNotFound, response)
+			return
+		}
 		if err.Error() == "mentor not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
@@ -55,32 +65,33 @@ func (h *handler) UpdateMentorHandler(c *gin.Context) {
 		return
 	}
 
-	formattedResponse := dto.FormatMentor(updatedMentor)
+	formattedResponse := dto.FormatCourse(updatedCourse)
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) GetMentorHandler(c *gin.Context) {
+func (h *handler) GetCourseHandler(c *gin.Context) {
 	page := c.Query("page")
 	pageSize := c.Query("pageSize")
 	search := c.Query("search")
-	data, metaData, err := h.service.GetAllMentor(pageSize, page, search)
+
+	data, metaData, err := h.service.GetAllCourse(pageSize, page, search)
 	if err != nil {
 		response := helper.APIResponse("error", http.StatusBadRequest, err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	formattedResponse := dto.FormatListMentor(data)
+	formattedResponse := dto.FormatListCourse(data)
 	response := helper.APIResponseWithPagination("success", http.StatusOK, "Success", metaData, formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) GetMentorByIDHandler(c *gin.Context) {
+func (h *handler) GetCourseByIDHandler(c *gin.Context) {
 	id := c.Param("id")
 
-	data, err := h.service.GetMentorByID(id)
+	data, err := h.service.GetCourseByID(id)
 	if err != nil {
-		if err.Error() == "mentor not found" {
+		if err.Error() == "course not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
 			return
@@ -90,18 +101,18 @@ func (h *handler) GetMentorByIDHandler(c *gin.Context) {
 		return
 	}
 
-	formattedResponse := dto.FormatMentor(data)
+	formattedResponse := dto.FormatCourse(data)
 
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) DeleteMentorByIDHandler(c *gin.Context) {
+func (h *handler) DeleteCourseByIDHandler(c *gin.Context) {
 	id := c.Param("id")
 
-	data, err := h.service.DeleteMentorByID(id)
+	data, err := h.service.DeleteCourseByID(id)
 	if err != nil {
-		if err.Error() == "mentor not found" {
+		if err.Error() == "course not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
 			return
@@ -111,7 +122,7 @@ func (h *handler) DeleteMentorByIDHandler(c *gin.Context) {
 		return
 	}
 
-	formattedResponse := dto.FormatMentor(data)
+	formattedResponse := dto.FormatCourse(data)
 
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)

@@ -29,7 +29,6 @@ func main() {
 
 	router := gin.Default()
 
-	// courseRouter := router.Group("/course")
 	mentorRouter := router.Group("/mentor")
 
 	mentorRouter.POST("/", handler.CreateMentorHandler)
@@ -37,6 +36,14 @@ func main() {
 	mentorRouter.GET("/:id", handler.GetMentorByIDHandler)
 	mentorRouter.DELETE("/:id", handler.DeleteMentorByIDHandler)
 	mentorRouter.GET("/", handler.GetMentorHandler)
+
+	courseRouter := router.Group("/course")
+
+	courseRouter.POST("/", handler.CreateCourseHandler)
+	courseRouter.PUT("/:id", handler.UpdateCourseHandler)
+	courseRouter.GET("/:id", handler.GetCourseByIDHandler)
+	courseRouter.DELETE("/:id", handler.DeleteCourseByIDHandler)
+	courseRouter.GET("/", handler.GetCourseHandler)
 
 	err = router.Run(fmt.Sprintf(":%s", os.Getenv("RUNNING_PORT")))
 	if err != nil {

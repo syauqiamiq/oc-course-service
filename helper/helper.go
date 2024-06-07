@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -30,14 +31,16 @@ func APIResponse(status string, code int, message string, data interface{}) Resp
 }
 
 type ResponseWithPagination struct {
+	Status  string      `json:"status"`
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Meta    MetaData    `json:"meta"`
 	Data    interface{} `json:"data"`
 }
 
-func APIResponseWithPagination(code int, message string, metaData MetaData, data interface{}) ResponseWithPagination {
+func APIResponseWithPagination(status string, code int, message string, metaData MetaData, data interface{}) ResponseWithPagination {
 	return ResponseWithPagination{
+		Status:  status,
 		Code:    code,
 		Message: message,
 		Meta:    metaData,
@@ -61,4 +64,18 @@ func RemoveSpecialCharsAndSpaces(input string) string {
 	result := reg.ReplaceAllString(input, "")
 
 	return result
+}
+
+func QueryPaginationTemplate(pageSize string, page string) (int, int, error) {
+	convertedPageSize, err := strconv.Atoi(pageSize)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	convertedPage, err := strconv.Atoi(page)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return convertedPageSize, convertedPage, nil
 }

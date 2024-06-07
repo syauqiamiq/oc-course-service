@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (r *repository) CreateMentor(data models.Mentor) (models.Mentor, error) {
+func (r *repository) CreateCourse(data models.Course) (models.Course, error) {
 
 	err := r.db.Create(&data).Error
 	if err != nil {
@@ -17,15 +17,15 @@ func (r *repository) CreateMentor(data models.Mentor) (models.Mentor, error) {
 	return data, nil
 }
 
-func (r *repository) GetAllMentor(pageSize int, page int, keyword string) ([]models.Mentor, helper.MetaData, error) {
+func (r *repository) GetAllCourse(pageSize int, page int, keyword string) ([]models.Course, helper.MetaData, error) {
 
 	var metaData helper.MetaData
-	var data []models.Mentor
+	var data []models.Course
 
 	db := r.db.Model(&data)
 
 	if keyword != "" {
-		db.Where("LOWER(name)  LIKE ?", "%"+strings.ToLower(keyword)+"%")
+		db.Where("LOWER(name) LIKE ?", "%"+strings.ToLower(keyword)+"%")
 	}
 
 	// Calculate the total number of records
@@ -51,8 +51,9 @@ func (r *repository) GetAllMentor(pageSize int, page int, keyword string) ([]mod
 	return data, metaData, nil
 
 }
-func (r *repository) GetMentorByID(id string) (models.Mentor, error) {
-	var result models.Mentor
+
+func (r *repository) GetCourseByID(id string) (models.Course, error) {
+	var result models.Course
 	err := r.db.First(&result, "id = ?", id).Error
 	if err != nil {
 		return result, err
@@ -61,8 +62,8 @@ func (r *repository) GetMentorByID(id string) (models.Mentor, error) {
 	return result, nil
 }
 
-func (r *repository) UpdateMentorByID(id string, data models.Mentor) (models.Mentor, error) {
-	var result models.Mentor
+func (r *repository) UpdateCourseByID(id string, data models.Course) (models.Course, error) {
+	var result models.Course
 	err := r.db.Model(&result).Where("id = ?", id).Updates(data).Error
 	if err != nil {
 		return result, err
@@ -71,9 +72,9 @@ func (r *repository) UpdateMentorByID(id string, data models.Mentor) (models.Men
 	return result, nil
 }
 
-func (r *repository) DeleteMentorByID(id string) (models.Mentor, error) {
+func (r *repository) DeleteCourseByID(id string) (models.Course, error) {
 
-	var data models.Mentor
+	var data models.Course
 	err := r.db.Delete(&data, "id = ?", id).Error
 	if err != nil {
 		return data, err

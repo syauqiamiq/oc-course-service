@@ -5,7 +5,7 @@ import "github.com/google/uuid"
 type Course struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();index;primaryKey"`
 	Name        string
-	Certificate int
+	Certificate *bool
 	Thumbnail   string
 	Type        string
 	Status      string

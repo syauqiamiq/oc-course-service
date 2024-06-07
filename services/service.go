@@ -31,7 +31,12 @@ type Service interface {
 	DeleteCourseByID(id string) (models.Course, error)
 	CreateChapter(input dto.ChapterInput) (models.Chapter, error)
 	UpdateChapter(id string, input dto.UpdateChapterInput) (models.Chapter, error)
-	GetAllChapter() ([]models.Chapter, error)
+	GetAllChapter(courseId string) ([]models.Chapter, error)
 	GetChapterByID(id string) (models.Chapter, error)
 	DeleteChapterByID(id string) (models.Chapter, error)
+	CreateLesson(input dto.LessonInput) (models.Lesson, error)
+	UpdateLesson(id string, input dto.UpdateLessonInput) (models.Lesson, error)
+	GetAllLesson(chapterId string) ([]models.Lesson, error)
+	GetLessonByID(id string) (models.Lesson, error)
+	DeleteLessonByID(id string) (models.Lesson, error)
 }

@@ -53,6 +53,14 @@ func main() {
 	chapterRouter.DELETE("/:id", handler.DeleteChapterByIDHandler)
 	chapterRouter.GET("/", handler.GetChapterHandler)
 
+	lessonRouter := router.Group("/lesson")
+
+	lessonRouter.POST("/", handler.CreateLessonHandler)
+	lessonRouter.PUT("/:id", handler.UpdateLessonHandler)
+	lessonRouter.GET("/:id", handler.GetLessonByIDHandler)
+	lessonRouter.DELETE("/:id", handler.DeleteLessonByIDHandler)
+	lessonRouter.GET("/", handler.GetLessonHandler)
+
 	err = router.Run(fmt.Sprintf(":%s", os.Getenv("RUNNING_PORT")))
 	if err != nil {
 		panic("Error When Running")

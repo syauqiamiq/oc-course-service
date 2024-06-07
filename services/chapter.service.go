@@ -62,8 +62,8 @@ func (s *service) UpdateChapter(id string, input dto.UpdateChapterInput) (models
 	return updateChapter, nil
 }
 
-func (s *service) GetAllChapter() ([]models.Chapter, error) {
-	data, err := s.repository.GetAllChapter()
+func (s *service) GetAllChapter(courseId string) ([]models.Chapter, error) {
+	data, err := s.repository.GetAllChapter(courseId)
 	if err != nil {
 		return data, err
 	}

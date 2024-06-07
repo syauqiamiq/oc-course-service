@@ -2,7 +2,7 @@ package repository
 
 import "ocCourseService/models"
 
-func (r *repository) CreateChapter(data models.Chapter) (models.Chapter, error) {
+func (r *repository) CreateLesson(data models.Lesson) (models.Lesson, error) {
 
 	err := r.db.Create(&data).Error
 	if err != nil {
@@ -12,14 +12,14 @@ func (r *repository) CreateChapter(data models.Chapter) (models.Chapter, error) 
 	return data, nil
 }
 
-func (r *repository) GetAllChapter(courseId string) ([]models.Chapter, error) {
+func (r *repository) GetAllLesson(chapterId string) ([]models.Lesson, error) {
 
-	var data []models.Chapter
+	var data []models.Lesson
 
 	db := r.db.Model(&data)
 
-	if courseId != "" {
-		db.Where("course_id = ?", courseId)
+	if chapterId != "" {
+		db.Where("chapter_id = ?", chapterId)
 	}
 
 	err := db.Scan(&data).Error
@@ -31,8 +31,8 @@ func (r *repository) GetAllChapter(courseId string) ([]models.Chapter, error) {
 
 }
 
-func (r *repository) GetChapterByID(id string) (models.Chapter, error) {
-	var result models.Chapter
+func (r *repository) GetLessonByID(id string) (models.Lesson, error) {
+	var result models.Lesson
 	err := r.db.First(&result, "id = ?", id).Error
 	if err != nil {
 		return result, err
@@ -41,8 +41,8 @@ func (r *repository) GetChapterByID(id string) (models.Chapter, error) {
 	return result, nil
 }
 
-func (r *repository) UpdateChapterByID(id string, data models.Chapter) (models.Chapter, error) {
-	var result models.Chapter
+func (r *repository) UpdateLessonByID(id string, data models.Lesson) (models.Lesson, error) {
+	var result models.Lesson
 	err := r.db.Model(&result).Where("id = ?", id).Updates(data).Error
 	if err != nil {
 		return result, err
@@ -51,9 +51,9 @@ func (r *repository) UpdateChapterByID(id string, data models.Chapter) (models.C
 	return result, nil
 }
 
-func (r *repository) DeleteChapterByID(id string) (models.Chapter, error) {
+func (r *repository) DeleteLessonByID(id string) (models.Lesson, error) {
 
-	var data models.Chapter
+	var data models.Lesson
 	err := r.db.Delete(&data, "id = ?", id).Error
 	if err != nil {
 		return data, err

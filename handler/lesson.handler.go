@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *handler) CreateChapterHandler(c *gin.Context) {
-	var input dto.ChapterInput
+func (h *handler) CreateLessonHandler(c *gin.Context) {
+	var input dto.LessonInput
 	err := c.ShouldBindJSON(&input)
 
 	if err != nil {
@@ -19,9 +19,9 @@ func (h *handler) CreateChapterHandler(c *gin.Context) {
 		return
 	}
 
-	createdChapter, err := h.service.CreateChapter(input)
+	createdLesson, err := h.service.CreateLesson(input)
 	if err != nil {
-		if err.Error() == "course not found" {
+		if err.Error() == "chapter not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
 			return
@@ -30,13 +30,13 @@ func (h *handler) CreateChapterHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	formattedResponse := dto.FormatChapter(createdChapter)
+	formattedResponse := dto.FormatLesson(createdLesson)
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) UpdateChapterHandler(c *gin.Context) {
-	var input dto.UpdateChapterInput
+func (h *handler) UpdateLessonHandler(c *gin.Context) {
+	var input dto.UpdateLessonInput
 	err := c.ShouldBindJSON(&input)
 
 	id := c.Param("id")
@@ -48,47 +48,48 @@ func (h *handler) UpdateChapterHandler(c *gin.Context) {
 		return
 	}
 
-	updatedChapter, err := h.service.UpdateChapter(id, input)
+	updatedLesson, err := h.service.UpdateLesson(id, input)
 	if err != nil {
-		if err.Error() == "course not found" {
-			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
-			c.JSON(http.StatusNotFound, response)
-			return
-		}
 		if err.Error() == "chapter not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
 			return
 		}
+		if err.Error() == "lesson not found" {
+			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
+			c.JSON(http.StatusNotFound, response)
+			return
+		}
 		response := helper.APIResponse("error", http.StatusBadRequest, err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	formattedResponse := dto.FormatChapter(updatedChapter)
+	formattedResponse := dto.FormatLesson(updatedLesson)
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) GetChapterHandler(c *gin.Context) {
-	courseId := c.Query("course_id")
-	data, err := h.service.GetAllChapter(courseId)
+func (h *handler) GetLessonHandler(c *gin.Context) {
+
+	chapterId := c.Query("chapter_id")
+	data, err := h.service.GetAllLesson(chapterId)
 	if err != nil {
 		response := helper.APIResponse("error", http.StatusBadRequest, err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	formattedResponse := dto.FormatListChapter(data)
+	formattedResponse := dto.FormatListLesson(data)
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) GetChapterByIDHandler(c *gin.Context) {
+func (h *handler) GetLessonByIDHandler(c *gin.Context) {
 	id := c.Param("id")
 
-	data, err := h.service.GetChapterByID(id)
+	data, err := h.service.GetLessonByID(id)
 	if err != nil {
-		if err.Error() == "chapter not found" {
+		if err.Error() == "lesson not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
 			return
@@ -98,18 +99,18 @@ func (h *handler) GetChapterByIDHandler(c *gin.Context) {
 		return
 	}
 
-	formattedResponse := dto.FormatChapter(data)
+	formattedResponse := dto.FormatLesson(data)
 
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)
 }
 
-func (h *handler) DeleteChapterByIDHandler(c *gin.Context) {
+func (h *handler) DeleteLessonByIDHandler(c *gin.Context) {
 	id := c.Param("id")
 
-	data, err := h.service.DeleteChapterByID(id)
+	data, err := h.service.DeleteLessonByID(id)
 	if err != nil {
-		if err.Error() == "chapter not found" {
+		if err.Error() == "lesson not found" {
 			response := helper.APIResponse("error", http.StatusNotFound, err.Error(), nil)
 			c.JSON(http.StatusNotFound, response)
 			return
@@ -119,7 +120,7 @@ func (h *handler) DeleteChapterByIDHandler(c *gin.Context) {
 		return
 	}
 
-	formattedResponse := dto.FormatChapter(data)
+	formattedResponse := dto.FormatLesson(data)
 
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
 	c.JSON(response.Code, response)

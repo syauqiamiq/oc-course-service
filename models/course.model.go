@@ -9,7 +9,7 @@ type Course struct {
 	Thumbnail   string
 	Type        string
 	Status      string
-	Price       uint
+	Price       uint `gorm:"default:0;"`
 	Level       string
 	Description string
 	MentorID    uuid.UUID `gorm:"type:uuid;foreignKey;index"`

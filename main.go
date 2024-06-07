@@ -25,11 +25,18 @@ func main() {
 
 	service := services.NewService(repository)
 
-	_ = handler.NewHandler(service)
+	handler := handler.NewHandler(service)
 
 	router := gin.Default()
 
 	// courseRouter := router.Group("/course")
+	mentorRouter := router.Group("/mentor")
+
+	mentorRouter.POST("/", handler.CreateMentorHandler)
+	mentorRouter.PUT("/:id", handler.UpdateMentorHandler)
+	mentorRouter.GET("/:id", handler.GetMentorByIDHandler)
+	mentorRouter.DELETE("/:id", handler.DeleteMentorByIDHandler)
+	mentorRouter.GET("/", handler.GetMentorHandler)
 
 	err = router.Run(fmt.Sprintf(":%s", os.Getenv("RUNNING_PORT")))
 	if err != nil {

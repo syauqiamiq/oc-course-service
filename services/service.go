@@ -39,4 +39,6 @@ type Service interface {
 	GetAllLesson(chapterId string) ([]models.Lesson, error)
 	GetLessonByID(id string) (models.Lesson, error)
 	DeleteLessonByID(id string) (models.Lesson, error)
+	CreateMyCourse(input dto.MyCourseInput) (models.MyCourse, error)
+	GetAllMyCourse(userId string) ([]models.MyCourse, error)
 }

@@ -61,6 +61,11 @@ func main() {
 	lessonRouter.DELETE("/:id", handler.DeleteLessonByIDHandler)
 	lessonRouter.GET("/", handler.GetLessonHandler)
 
+	
+	myCourseRouter := router.Group("/my-course")
+	myCourseRouter.POST("/", handler.CreateMyCourseHandler)
+	myCourseRouter.GET("/", handler.GetMyCourseHandler)
+
 	err = router.Run(fmt.Sprintf(":%s", os.Getenv("RUNNING_PORT")))
 	if err != nil {
 		panic("Error When Running")

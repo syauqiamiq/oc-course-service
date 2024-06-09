@@ -39,4 +39,7 @@ type Repository interface {
 	GetLessonByID(id string) (models.Lesson, error)
 	UpdateLessonByID(id string, data models.Lesson) (models.Lesson, error)
 	DeleteLessonByID(id string) (models.Lesson, error)
+	CreateMyCourse(data models.MyCourse) (models.MyCourse, error)
+	CheckMyCourseIsExist(courseId string, userId string)(models.MyCourse, error)
+	GetAllMyCourse(userId string) ([]models.MyCourse, error)
 }

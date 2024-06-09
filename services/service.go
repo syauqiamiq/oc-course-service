@@ -41,4 +41,5 @@ type Service interface {
 	DeleteLessonByID(id string) (models.Lesson, error)
 	CreateMyCourse(input dto.MyCourseInput) (models.MyCourse, error)
 	GetAllMyCourse(userId string) ([]models.MyCourse, error)
+	CheckMyCourseIsExist(userId string, couseId string) (bool, error)
 }

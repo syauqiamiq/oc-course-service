@@ -45,20 +45,12 @@ func (s *service) CreateMyCourse(input dto.MyCourseInput) (models.MyCourse, erro
 		return models.MyCourse{},errors.New("user not found")
 	}
 
-	// CHECK DUPLICATION
-	_, err = s.repository.CheckMyCourseIsExist(input.CourseID, input.UserID)
+	createdData, err := s.repository.CreateMyCourse(data)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			createdData, err := s.repository.CreateMyCourse(data)
-			if err != nil {
-		
-				return data, err
-			}
-			return createdData, nil
-		}
-		return models.MyCourse{}, err
+
+		return data, err
 	}
-	return models.MyCourse{}, errors.New("user already take this course")
+	return createdData, nil
 }
 
 func (s *service) GetAllMyCourse(userId string) ([]models.MyCourse, error) {
@@ -68,4 +60,18 @@ func (s *service) GetAllMyCourse(userId string) ([]models.MyCourse, error) {
 	}
 
 	return data, nil
+}
+
+func (s *service) CheckMyCourseIsExist(userId string, couseId string) (bool, error) {
+	// CHECK DUPLICATION
+	_, err := s.repository.CheckMyCourseIsExist(couseId,userId)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			
+			return false, nil
+		}
+		return false, err
+	}
+	return true, errors.New("user already take this course")
+
 }

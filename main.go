@@ -65,6 +65,7 @@ func main() {
 	myCourseRouter := router.Group("/my-course")
 	myCourseRouter.POST("/", handler.CreateMyCourseHandler)
 	myCourseRouter.GET("/", handler.GetMyCourseHandler)
+	myCourseRouter.POST("/check", handler.CheckMyCourseIsExistHandler)
 
 	err = router.Run(fmt.Sprintf(":%s", os.Getenv("RUNNING_PORT")))
 	if err != nil {

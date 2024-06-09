@@ -31,11 +31,7 @@ func (h *handler) CreateMyCourseHandler(c *gin.Context) {
 			c.JSON(http.StatusNotFound, response)
 			return
 		}
-		if err.Error() == "user already take this course" {
-			response := helper.APIResponse("error", http.StatusConflict, err.Error(), nil)
-			c.JSON(http.StatusConflict, response)
-			return
-		}
+
 		response := helper.APIResponse("error", http.StatusBadRequest, err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -57,5 +53,31 @@ func (h *handler) GetMyCourseHandler(c *gin.Context) {
 	}
 	formattedResponse := dto.FormatListMyCourse(data)
 	response := helper.APIResponse("success", http.StatusOK, "Success", formattedResponse)
+	c.JSON(response.Code, response)
+}
+
+func (h *handler) CheckMyCourseIsExistHandler(c *gin.Context) {
+	var input dto.MyCourseInput
+	err := c.ShouldBindJSON(&input)
+
+	if err != nil {
+		formattedError := helper.FormatValidationError(err)
+		response := helper.APIResponse("error", http.StatusBadRequest, "Bad Request", formattedError)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.service.CheckMyCourseIsExist(input.UserID, input.CourseID)
+	if err != nil {
+		if err.Error() == "user already take this course" {
+			response := helper.APIResponse("error", http.StatusConflict, err.Error(), nil)
+			c.JSON(http.StatusConflict, response)
+			return
+		}
+		response := helper.APIResponse("error", http.StatusBadRequest, err.Error(), nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	response := helper.APIResponse("success", http.StatusOK, "Success", nil)
 	c.JSON(response.Code, response)
 }

@@ -36,6 +36,7 @@ func FormatListMyCourse(data []models.MyCourse) []MyCourseResponse {
 		formattedData = append(formattedData, MyCourseResponse{
 			ID:         v.ID.String(),
 			CourseID: v.CourseID.String(),
+			UserID: v.UserID.String(),
 			CreatedAt:  v.CreatedAt,
 			UpdatedAt:  v.UpdatedAt,
 		})

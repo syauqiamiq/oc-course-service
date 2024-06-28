@@ -43,15 +43,42 @@ func (s *service) CreateCourse(input dto.CourseInput) (models.Course, error) {
 }
 
 func (s *service) UpdateCourse(id string, input dto.UpdateCourseInput) (models.Course, error) {
-	_, err := s.repository.GetMentorByID(input.MentorID)
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return models.Course{}, errors.New("mentor not found")
+	data := models.Course{}
+
+	if input.MentorID != "" {
+		_, err := s.repository.GetMentorByID(input.MentorID)
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return models.Course{}, errors.New("mentor not found")
+			}
+			return models.Course{}, err
 		}
-		return models.Course{}, err
+
+		data = models.Course{
+			Name:        input.Name,
+			Certificate: input.Certificate,
+			Thumbnail:   input.Thumbnail,
+			Type:        input.Type,
+			Status:      input.Status,
+			Price:       input.Price,
+			Level:       input.Level,
+			Description: input.Description,
+			MentorID:    uuid.MustParse(input.MentorID),
+		}
+	} else {
+		data = models.Course{
+			Name:        input.Name,
+			Certificate: input.Certificate,
+			Thumbnail:   input.Thumbnail,
+			Type:        input.Type,
+			Status:      input.Status,
+			Price:       input.Price,
+			Level:       input.Level,
+			Description: input.Description,
+		}
 	}
 
-	_, err = s.repository.GetCourseByID(id)
+	_, err := s.repository.GetCourseByID(id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return models.Course{}, errors.New("course not found")
@@ -59,17 +86,6 @@ func (s *service) UpdateCourse(id string, input dto.UpdateCourseInput) (models.C
 		return models.Course{}, err
 	}
 
-	data := models.Course{
-		Name:        input.Name,
-		Certificate: input.Certificate,
-		Thumbnail:   input.Thumbnail,
-		Type:        input.Type,
-		Status:      input.Status,
-		Price:       input.Price,
-		Level:       input.Level,
-		Description: input.Description,
-		MentorID:    uuid.MustParse(input.MentorID),
-	}
 	updateCourse, err := s.repository.UpdateCourseByID(id, data)
 	if err != nil {
 		return updateCourse, err

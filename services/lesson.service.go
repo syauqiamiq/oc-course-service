@@ -35,15 +35,29 @@ func (s *service) CreateLesson(input dto.LessonInput) (models.Lesson, error) {
 }
 
 func (s *service) UpdateLesson(id string, input dto.UpdateLessonInput) (models.Lesson, error) {
-	_, err := s.repository.GetChapterByID(input.ChapterID)
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return models.Lesson{}, errors.New("chapter not found")
+	data := models.Lesson{}
+
+	if input.ChapterID != "" {
+		_, err := s.repository.GetChapterByID(input.ChapterID)
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return models.Lesson{}, errors.New("chapter not found")
+			}
+			return models.Lesson{}, err
 		}
-		return models.Lesson{}, err
+		data = models.Lesson{
+			Name:      input.Name,
+			Video:     input.Video,
+			ChapterID: uuid.MustParse(input.ChapterID),
+		}
+	} else {
+		data = models.Lesson{
+			Name:  input.Name,
+			Video: input.Video,
+		}
 	}
 
-	_, err = s.repository.GetLessonByID(id)
+	_, err := s.repository.GetLessonByID(id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return models.Lesson{}, errors.New("lesson not found")
@@ -51,11 +65,6 @@ func (s *service) UpdateLesson(id string, input dto.UpdateLessonInput) (models.L
 		return models.Lesson{}, err
 	}
 
-	data := models.Lesson{
-		Name:      input.Name,
-		Video:     input.Video,
-		ChapterID: uuid.MustParse(input.ChapterID),
-	}
 	updateLesson, err := s.repository.UpdateLessonByID(id, data)
 	if err != nil {
 		return updateLesson, err

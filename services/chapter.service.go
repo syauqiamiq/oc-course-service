@@ -34,15 +34,27 @@ func (s *service) CreateChapter(input dto.ChapterInput) (models.Chapter, error) 
 }
 
 func (s *service) UpdateChapter(id string, input dto.UpdateChapterInput) (models.Chapter, error) {
-	_, err := s.repository.GetCourseByID(input.CourseID)
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return models.Chapter{}, errors.New("course not found")
+	data := models.Chapter{}
+
+	if input.CourseID != "" {
+		_, err := s.repository.GetCourseByID(input.CourseID)
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return models.Chapter{}, errors.New("course not found")
+			}
+			return models.Chapter{}, err
 		}
-		return models.Chapter{}, err
+		data = models.Chapter{
+			Name:     input.Name,
+			CourseID: uuid.MustParse(input.CourseID),
+		}
+	} else {
+		data = models.Chapter{
+			Name: input.Name,
+		}
 	}
 
-	_, err = s.repository.GetChapterByID(id)
+	_, err := s.repository.GetChapterByID(id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return models.Chapter{}, errors.New("chapter not found")
@@ -50,10 +62,6 @@ func (s *service) UpdateChapter(id string, input dto.UpdateChapterInput) (models
 		return models.Chapter{}, err
 	}
 
-	data := models.Chapter{
-		Name:     input.Name,
-		CourseID: uuid.MustParse(input.CourseID),
-	}
 	updateChapter, err := s.repository.UpdateChapterByID(id, data)
 	if err != nil {
 		return updateChapter, err
